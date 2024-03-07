@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <title>Крестики-нолики</title>
+    <style>
+        .cell {
+            background-color: transparent;
+            display: inline-block;
+            height: 100px;
+            width: 100px;
+        }
+    </style>>
+</head>
+<body>
+    <div id="new_game">
+        <h3>Выберете противника:</h3>
+        <button id="bot">Бот</button>
+        <button id="player">Игрок</button>
+    </div>
+    <div id="play_game" hidden>
+        <h3>Game started!</h3>
+        <output id="first_step"></output>
+        <div id="place_game">
+        </div>
+        <strong><output id="order_step" type="string"></strong>
+    </div>
+    <div id="restart_game" hidden>
+        <button id="exit">ВЫход</button>
+        <button id="restart">Начать заново</button>
+    </div>
+    <script src="newGame.js"></script>
+</body>
+</html>
