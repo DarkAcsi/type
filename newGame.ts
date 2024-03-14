@@ -4,20 +4,11 @@ const restartGame = document.getElementById("restart_game") as HTMLDivElement
 const buttonBot = document.getElementById("bot") as HTMLButtonElement
 const buttonPlayer = document.getElementById("player") as HTMLButtonElement
 const orderStep = document.getElementById("order_step") as HTMLOutputElement
-const cells:[string, number|null][] = [] 
-const placeGame = document.getElementById("place_game") as HTMLDivElement
-for (let index = 0; index < 3; index++) {
-    let div = document.createElement("div")
-    placeGame.append(div)
-    for (let index2 = 0; index2 < 3; index2++) {
-        let button = document.createElement("button")
-        let id = (index*3+index2).toString()
-        button.setAttribute("id", id)
-        button.setAttribute("class", "cell")
-        div.append(button)
-        cells.push([id, null]);
-        button.addEventListener("click", () => DoStep(id))
-    }
+const cells:[HTMLButtonElement, number|null][] = [] 
+for (let index = 0; index < 9; index++) {
+    let button = document.getElementById(index.toString()) as HTMLButtonElement
+    cells.push([button, null]);
+    button.addEventListener("click", () => DoStep(index))
 }
 let withBot = false
 let countSteps = 0
@@ -71,33 +62,29 @@ function SomeoneWin():null|number{
     return null
 }
 
-function DoStepBot(id:string){
-    let freeCells:[string, number|null][] = []
+function DoStepBot(){
+    let freeCells:number[] = []
     for (let index = 0; index < 9; index++) {
         if (!cells[index][1]) {
-            if (countSteps % 2) cells[index][0].style.backgroundImage = "img/circle.png"
-            else cells[index][0].style.backgroundImage = "img/cross.png"
-            let winner = SomeoneWin()
-            if (winner) return EndGame(winner)
-            else {
-                cells[index][0].style.backgroundImage = "none"
-                freeCells.push(cells[index])
-            }
+            freeCells.push(index)
         }
     }
     if (freeCells.length == 0) EndGame(-1)
-    else DoStep(freeCells[Math.floor(freeCells.length)])
+    else {
+        let id = freeCells[Math.floor(Math.random()*freeCells.length)%freeCells.length]
+        DoStep(id, false)
+    }
 }
 
-function DoStep(id:string){
-    if (countSteps % 2) cell[0].style.backgroundImage = "img/circle.png"
-    else cell[0].style.backgroundImage = "img/cross.png"
-    cell[0].disabled = true
-    cell[1] = countSteps % 2
+function DoStep(id:number, bot:boolean=true){
+    if (countSteps % 2) cells[id][0].style.backgroundImage = "img/circle.png"
+    else cells[id][0].style.backgroundImage = "img/cross.png"
+    cells[id][0].disabled = true
+    cells[id][1] = countSteps % 2
     let winner = SomeoneWin()
     if (winner) EndGame(winner)
     countSteps++
-    if (withBot) DoStepBot()
+    if (withBot && bot) DoStepBot()
 }
 
 
