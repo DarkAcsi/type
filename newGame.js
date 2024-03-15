@@ -1,6 +1,8 @@
 var newGame = document.getElementById("new_game");
 var playGame = document.getElementById("play_game");
 var restartGame = document.getElementById("restart_game");
+var buttonExit = document.getElementById("exit");
+var buttonRestart = document.getElementById("restart");
 var buttonBot = document.getElementById("bot");
 var buttonPlayer = document.getElementById("player");
 var orderStep = document.getElementById("order_step");
@@ -13,6 +15,8 @@ var _loop_1 = function (index) {
 for (var index = 0; index < 9; index++) {
     _loop_1(index);
 }
+buttonRestart.addEventListener("click", function () { return RestartGame(true); });
+buttonExit.addEventListener("click", ExitGame);
 var withBot = false;
 var countSteps = 0;
 var order = 0;
@@ -26,15 +30,20 @@ function PlayGame(bot) {
         if (order == 1)
             DoStepBot();
     }
+    else {
+        orderStep.style.display = "inline";
+        orderStep.textContent = "Ход 1 игрока";
+    }
     withBot = bot;
 }
 function RestartGame(restart) {
     countSteps = 0;
     for (var index = 0; index < 9; index++) {
-        cells[index][0].style.backgroundImage = "none";
+        cells[index][0].style.backgroundImage = "";
         cells[index][0].disabled = false;
         cells[index][1] = null;
     }
+    orderStep.style.display = "none";
     restartGame.style.display = "none";
     if (restart)
         PlayGame(withBot);
@@ -45,6 +54,20 @@ function ExitGame() {
     playGame.style.display = "none";
 }
 function EndGame(winner) {
+    playGame.style.display = "none";
+    orderStep.style.display = "none";
+    restartGame.style.display = "inline";
+    var textWinner = document.getElementById("winner");
+    var textWin = "Победил ";
+    if (winner == -1)
+        textWinner.textContent = "Ничья";
+    if (!withBot)
+        textWin += "игрок" + winner;
+    else if (order + 1 == winner)
+        textWin += "игрок";
+    else
+        textWin += "бот";
+    textWinner.textContent = textWin;
 }
 function SomeoneWin() {
     if (((cells[4][1] == cells[0][1] && cells[0][1] == cells[8][1]))
@@ -64,6 +87,11 @@ function DoStepBot() {
     var freeCells = [];
     for (var index = 0; index < 9; index++) {
         if (!cells[index][1]) {
+            cells[index][1] = countSteps % 2 + 1;
+            if (SomeoneWin()) {
+                return DoStep(index, false);
+            }
+            cells[index][1] = null;
             freeCells.push(index);
         }
     }
@@ -77,15 +105,17 @@ function DoStepBot() {
 function DoStep(id, bot) {
     if (bot === void 0) { bot = true; }
     if (countSteps % 2)
-        cells[id][0].style.backgroundImage = "img/circle.png";
+        cells[id][0].style.backgroundImage = "url(img/circle.png)";
     else
-        cells[id][0].style.backgroundImage = "img/cross.png";
+        cells[id][0].style.backgroundImage = "url(img/cross.png)";
     cells[id][0].disabled = true;
-    cells[id][1] = countSteps % 2;
+    cells[id][1] = countSteps % 2 + 1;
     var winner = SomeoneWin();
     if (winner)
         EndGame(winner);
     countSteps++;
+    if (!withBot)
+        orderStep.textContent = "Ход " + ((countSteps) % 2 + 1).toString() + " игрока";
     if (withBot && bot)
         DoStepBot();
 }

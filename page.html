@@ -5,6 +5,8 @@
     <title>Крестики-нолики</title>
     <style>
         .cell {
+            background-image: url("");
+            background-size: cover;
             display: inline-block;
             height: 100px;
             width: 100px;
@@ -40,7 +42,8 @@
         <strong><output id="order_step" type="string"></strong>
     </div>
     <div id="restart_game" hidden>
-        <button id="exit">ВЫход</button>
+        <h4 id="winner"></h4>
+        <button id="exit">Выход</button>
         <button id="restart">Начать заново</button>
     </div>
     <script src="newGame.js"></script>
