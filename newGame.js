@@ -23,14 +23,16 @@ var order = 0;
 function PlayGame(bot) {
     newGame.style.display = "none";
     playGame.style.display = "inline";
+    var firstStep = document.getElementById("first_step");
     if (bot) {
-        var firstStep = document.getElementById("first_step");
         order = Math.round(Math.random());
+        firstStep.style.display = "inline";
         firstStep.textContent = "\u0412\u044B \u0445\u043E\u0434\u0438\u0442\u0435: ".concat(order + 1);
         if (order == 1)
             DoStepBot();
     }
     else {
+        firstStep.style.display = "none";
         orderStep.style.display = "inline";
         orderStep.textContent = "Ход 1 игрока";
     }
@@ -60,13 +62,13 @@ function EndGame(winner) {
     var textWinner = document.getElementById("winner");
     var textWin = "Победил ";
     if (winner == -1)
-        textWinner.textContent = "Ничья";
-    if (!withBot)
-        textWin += "игрок" + winner;
+        textWin = "Ничья!";
+    else if (!withBot)
+        textWin += "игрок" + winner + "!";
     else if (order + 1 == winner)
-        textWin += "игрок";
+        textWin += "игрок!";
     else
-        textWin += "бот";
+        textWin += "бот!";
     textWinner.textContent = textWin;
 }
 function SomeoneWin() {
@@ -118,6 +120,8 @@ function DoStep(id, bot) {
         orderStep.textContent = "Ход " + ((countSteps) % 2 + 1).toString() + " игрока";
     if (withBot && bot)
         DoStepBot();
+    if (countSteps == 9)
+        EndGame(-1);
 }
 buttonBot.addEventListener("click", function () { return PlayGame(true); });
 buttonPlayer.addEventListener("click", function () { return PlayGame(false); });

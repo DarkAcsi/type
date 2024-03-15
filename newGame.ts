@@ -21,12 +21,14 @@ let order = 0
 function PlayGame(bot:boolean) {
     newGame.style.display = "none"
     playGame.style.display = "inline"
+    const firstStep = document.getElementById("first_step") as HTMLOutputElement
     if (bot){
-        const firstStep = document.getElementById("first_step") as HTMLOutputElement
         order = Math.round(Math.random())
+        firstStep.style.display = "inline"
         firstStep.textContent = `Вы ходите: ${order + 1}`
         if (order == 1) DoStepBot()
     } else {
+        firstStep.style.display = "none"
         orderStep.style.display = "inline"
         orderStep.textContent = "Ход 1 игрока"
     }
@@ -51,16 +53,16 @@ function ExitGame(){
     playGame.style.display = "none"
 }
 
-function EndGame(winner){
+function EndGame(winner: number){
     playGame.style.display = "none"
     orderStep.style.display = "none"
     restartGame.style.display = "inline"
     var textWinner = document.getElementById("winner") as HTMLHeadElement
     var textWin = "Победил "
-    if (winner == -1) textWinner.textContent = "Ничья"
-    if (!withBot) textWin += "игрок" + winner
-    else if (order + 1 == winner) textWin += "игрок"
-    else textWin += "бот"
+    if (winner == -1) textWin = "Ничья!"
+    else if (!withBot) textWin += "игрок" + winner + "!"
+    else if (order + 1 == winner) textWin += "игрок!"
+    else textWin += "бот!"
     textWinner.textContent = textWin
 }
 
@@ -108,6 +110,7 @@ function DoStep(id:number, bot:boolean=true){
     countSteps++
     if (!withBot) orderStep.textContent = "Ход " + ((countSteps) % 2 + 1).toString() + " игрока"
     if (withBot && bot) DoStepBot()
+    if (countSteps == 9) EndGame(-1)
 }
 
 
